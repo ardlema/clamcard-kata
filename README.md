@@ -7,6 +7,7 @@ Implement a system for a contactless travel card for the London underground.
 * The card is used by touching in and out at train stations.
 * The train system accepting this card has two categorical zones of stations, Zone A and Zone B.
 * The stations within the zones are as follows:
+
         -- Zone A
           Asterisk
           Antelope
@@ -22,9 +23,12 @@ Implement a system for a contactless travel card for the London underground.
 * Travelling within zone B is more expensive than travelling in Zone A.
 * The price of zone B is inclusive of travelling within zone A.
 * The fares are as described below:
-                        Single  Day     Week    Month
-                ZoneA   £2.50   £7.00   £40.00  £145.00
-                ZoneB   £3.00   £8.00   £47.00  £165.50
+
+|   | Single  | Day   | Week   | Month   |
+|---|---|---|---|---|
+| Zone A  |  £2.50 |  £7.00 |  £40.00 | £145.00  |
+| Zone B  | £3.00   |  £8.00 |  £47.00  | £165.50  |
+
         -- A Single is a journey from one station to another 
         -- A Day fare includes all single journies made within a single day.
         -- A Week fare includes all single journies made within a single week.

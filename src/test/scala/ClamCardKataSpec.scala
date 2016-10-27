@@ -25,10 +25,14 @@ class ClamCardKataSpec extends FeatureSpec with GivenWhenThen with Matchers {
       When("He travels from Asterisk to Barbican")
       michaelClamCard.travels(Journey("Asterisk", "Barbican"))
       Then("He will be charged £3.00 for his first journey")
-      val charge = Charger.chargeCard(michaelClamCard)
-      charge should be(3.0)
+      val charge1 = Charger.chargeCard(michaelClamCard)
+      charge1 should be(3.0)
       And("He travels from Barbican to Balham")
+      michaelClamCard.travels(Journey("Barbican", "Balham"))
       And("a further £3.00 for his second journey.")
+      val charge2 = Charger.chargeCard(michaelClamCard)
+      charge2 should be(3.0)
+
     }
 
     scenario("Michael travels from ZoneA to ZoneB, within ZoneB and within ZoneB again") {

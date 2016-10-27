@@ -22,7 +22,9 @@ object Charger {
       val journey = clamCard.journeys(0)
       val originZone = getZoneFromStation(journey.origin)
       val destinyZone = getZoneFromStation(journey.destiny)
-      0F
+      //if (originZone.equals(destinyZone)) {
+      val pricesPerZone: List[PeriodAndPrice] = prices(originZone)
+      pricesPerZone.find(p => p.period.equals("Single")).get.price
     }
 
 }

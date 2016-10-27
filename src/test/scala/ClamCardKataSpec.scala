@@ -1,7 +1,7 @@
-import org.scalatest.{FeatureSpec, GivenWhenThen}
+import org.scalatest.{FeatureSpec, GivenWhenThen, Matchers}
 import org.scalatest.Matchers._
 
-class ClamCardKataSpec extends FeatureSpec with GivenWhenThen {
+class ClamCardKataSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   feature("The user can use his contactless travel card for the London underground") {
 

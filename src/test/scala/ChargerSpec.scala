@@ -13,13 +13,17 @@ class ChargerSpec extends FunSpec {
      val card = ClamCard("manolo", 1)
     card.travels(Journey("Asterisk", "Aldgate"))
 
-    Charger.chargeCard(card) should be(2.5)
+    val charges = Charger.chargeCard(card)
+    val firstCharge = charges(0)
+    firstCharge.price should be(2.5)
   }
 
   it("should charge a journey from the B Area to the A Area") {
     val card = ClamCard("manolo", 1)
     card.travels(Journey("Asterisk", "Barbican"))
 
-    Charger.chargeCard(card) should be(3.0)
+    val charges = Charger.chargeCard(card)
+    val firstCharge = charges(0)
+    firstCharge.price should be(3.0)
   }
 }

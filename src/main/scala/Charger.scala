@@ -19,19 +19,21 @@ object Charger {
       zonesFounded.head
     }
 
-    def chargeCard(clamCard: ClamCard): Float = {
+    def chargeCard(clamCard: ClamCard): List[Charge] = {
       val journey = clamCard.journeys(0)
       val originZone = getZoneFromStation(journey.origin)
       val destinyZone = getZoneFromStation(journey.destiny)
       if (originZone.equals(destinyZone)) {
         val pricesPerZone = prices(originZone)
-        return pricesPerZone.find(p => p.period.equals("Single")).get.price
+        return List(Charge(journey, pricesPerZone.find(p => p.period.equals("Single")).get.price))
       } else {
-        return prices("B").find(_.period.equals("Single")).get.price
+        return List(Charge(journey, prices("B").find(_.period.equals("Single")).get.price))
       }
     }
 
 }
+
+case class Charge(journey: Journey, price: Float)
 
 case class Journey(origin: String, destiny: String)
 

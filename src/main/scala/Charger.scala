@@ -1,4 +1,5 @@
 import scala.collection.immutable.Iterable
+import scala.collection.mutable.ListBuffer
 object Charger {
 
     val zones = Map("A" -> List("Asterisk", "Aldgate"), "B" -> List("Barbican", "Balham"))
@@ -31,10 +32,11 @@ object Charger {
 
 case class Journey(origin: String, destiny: String)
 
-case class ClamCard(name: String, id: Long, journeys: List[Journey] = List()) {
+case class ClamCard(name: String, id: Long) {
+  var journeys: ListBuffer[Journey] = ListBuffer()
 
   def travels(journey: Journey) = {
-    journeys :+ journey
+    journeys.append(journey)
   }
 }
 

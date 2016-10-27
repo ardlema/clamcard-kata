@@ -10,7 +10,8 @@ class ChargerSpec extends FunSpec {
   }
 
   it("should charge a journey within the A Area") {
-     val card = ClamCard("manolo", 1, List(Journey("Asterisk", "Aldgate")))
+     val card = ClamCard("manolo", 1)
+    card.travels(Journey("Asterisk", "Aldgate"))
 
     Charger.chargeCard(card) should be(2.5)
   }

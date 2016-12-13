@@ -34,17 +34,29 @@ object Charger {
 
   def topIn(card: ClamCard, origin: String): Unit = card.addOrigin(origin)
 
+  def topOut(card: ClamCard, destiny: String): Unit = {
+    card.addDestiny(destiny)
+    card.charge()
+  }
+
 }
 
-case class Charge(journey: Journey, price: Float)
-
-case class Journey(origin: String, destiny: Option[String] = None)
+case class Journey(origin: String, destiny: Option[String] = None, charge: Float = 0)
 
 case class ClamCard(name: String) {
   var journeys: ListBuffer[Journey] = ListBuffer()
 
-  def addOrigin(origin: String): Unit = {
-    journeys.prepend(Journey(origin))
+  def addOrigin(origin: String): Unit = journeys.prepend(Journey(origin))
+
+  def addDestiny(destiny: String): Unit = journeys.update(0, Journey(journeys.head.origin, Some(destiny)))
+
+  def charge(): Unit = {
+    val journey = journeys(0)
+    val originZone = Charger.getZoneFromStation(journey.origin)
+    val destinyZone = Charger.getZoneFromStation(journey.destiny.get)
+    if (originZone.equals(destinyZone)) {
+      journeys.update(0, journeys(0).copy(charge = Charger.prices(originZone).find(p => p.period.equals("Single")).get.price))
+    }
   }
 }
 

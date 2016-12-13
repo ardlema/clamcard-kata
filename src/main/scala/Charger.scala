@@ -1,5 +1,6 @@
 import scala.collection.immutable.Iterable
 import scala.collection.mutable.ListBuffer
+
 object Charger {
 
     val zones = Map("A" -> List("Asterisk", "Aldgate"), "B" -> List("Barbican", "Balham"))
@@ -19,7 +20,7 @@ object Charger {
       zonesFounded.head
     }
 
-    def chargeCard(clamCard: ClamCard): List[Charge] = {
+    /*def chargeCard(clamCard: ClamCard): List[Charge] = {
       val journey = clamCard.journeys(0)
       val originZone = getZoneFromStation(journey.origin)
       val destinyZone = getZoneFromStation(journey.destiny)
@@ -29,19 +30,21 @@ object Charger {
       } else {
         return List(Charge(journey, prices("B").find(_.period.equals("Single")).get.price))
       }
-    }
+    }*/
+
+  def topIn(card: ClamCard, origin: String): Unit = card.addOrigin(origin)
 
 }
 
 case class Charge(journey: Journey, price: Float)
 
-case class Journey(origin: String, destiny: String)
+case class Journey(origin: String, destiny: Option[String] = None)
 
-case class ClamCard(name: String, id: Long) {
+case class ClamCard(name: String) {
   var journeys: ListBuffer[Journey] = ListBuffer()
 
-  def travels(journey: Journey) = {
-    journeys.append(journey)
+  def addOrigin(origin: String): Unit = {
+    journeys.prepend(Journey(origin))
   }
 }
 

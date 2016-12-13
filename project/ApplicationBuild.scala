@@ -57,6 +57,6 @@ object ApplicationBuild extends Build {
       libraryDependencies ++= customLibraryDependencies,
       parallelExecution in Test := false,
       fork in Test := true
-    ) ++ scalastyleSettings ++ scoverageSettings
+    ) ++ scalastyleSettings
   )
 }

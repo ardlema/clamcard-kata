@@ -35,21 +35,13 @@ class ChargerSpec extends FunSpec {
     card.journeys(0).charge should be(2.5)
   }
 
-  /*it("should charge a journey within the A Area") {
-    val card = ClamCard("manolo", 1)
-    card.travels(Journey("Asterisk", "Aldgate"))
-
-    val charges = Charger.chargeCard(card)
-    val firstCharge = charges(0)
-    firstCharge.price should be(2.5)
+  it("should charge a journey from the A Area to the B Area") {
+    val card = ClamCard("manolo")
+    Charger.topIn(card, "Asterisk")
+    Charger.topOut(card, "Barbican")
+    card.journeys.size should be(1)
+    card.journeys(0).origin should be("Asterisk")
+    card.journeys(0).destiny.get should be("Barbican")
+    card.journeys(0).charge should be(3.0)
   }
-
-  it("should charge a journey from the B Area to the A Area") {
-    val card = ClamCard("manolo", 1)
-    card.travels(Journey("Asterisk", "Barbican"))
-
-    val charges = Charger.chargeCard(card)
-    val firstCharge = charges(0)
-    firstCharge.price should be(3.0)
-  }*/
 }

@@ -56,6 +56,8 @@ case class ClamCard(name: String) {
     val destinyZone = Charger.getZoneFromStation(journey.destiny.get)
     if (originZone.equals(destinyZone)) {
       journeys.update(0, journeys(0).copy(charge = Charger.prices(originZone).find(p => p.period.equals("Single")).get.price))
+    } else {
+      journeys.update(0, journeys(0).copy(charge = Charger.prices("B").find(p => p.period.equals("Single")).get.price))
     }
   }
 }

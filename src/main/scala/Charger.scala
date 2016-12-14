@@ -32,7 +32,7 @@ object Charger {
     if (originZone.equals(destinyZone)) {
       Charger.prices(originZone).find(p => p.period.equals("Single")).get.price
     } else {
-      0
+      Charger.prices("B").find(p => p.period.equals("Single")).get.price
     }
   }
 }

@@ -26,9 +26,9 @@ object Charger {
     card.charge()
   }
 
-  def workOutCharge(origin: String, destiny: String, card: ClamCard): Float = {
-    val originZone = Charger.getZoneFromStation(origin)
-    val destinyZone = Charger.getZoneFromStation(destiny)
+  def workOutCharge(card: ClamCard): Float = {
+    val originZone = Charger.getZoneFromStation(card.lastOrigin)
+    val destinyZone = Charger.getZoneFromStation(card.lastDestiny)
     if (originZone.equals(destinyZone)) {
       Charger.prices(originZone).find(p => p.period.equals("Single")).get.price
     } else {
@@ -45,6 +45,10 @@ case class ClamCard(name: String) {
   def addOrigin(origin: String): Unit = journeys.prepend(Journey(origin))
 
   def addDestiny(destiny: String): Unit = journeys.update(0, Journey(journeys.head.origin, Some(destiny)))
+
+  def lastOrigin(): String = journeys(0).origin
+
+  def lastDestiny(): String = journeys(0).destiny.getOrElse("")
 
   def charge(): Unit = {
     val journey = journeys(0)

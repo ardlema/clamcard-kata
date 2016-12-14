@@ -49,7 +49,15 @@ class ChargerSpec extends FunSpec {
     val card = ClamCard("manolo")
     Charger.topIn(card, "Asterisk")
     Charger.topOut(card, "Aldgate")
-    val charge = Charger.workOutCharge("Asterisk", "Aldgate", card)
+    val charge = Charger.workOutCharge(card)
     charge should be(2.5)
+  }
+
+  it("should charge the Single Fare for Zone B when travelling within Zone B and does not exced the Day Fare") {
+    val card = ClamCard("manolo")
+    Charger.topIn(card, "Barbican")
+    Charger.topOut(card, "Balham")
+    val charge = Charger.workOutCharge(card)
+    charge should be(3.0)
   }
 }

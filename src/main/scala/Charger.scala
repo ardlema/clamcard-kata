@@ -39,10 +39,9 @@ object Charger {
 
 case class Journey(origin: String, destiny: Option[String] = None, charge: Float = 0)
 
-case class ClamCard(name: String) {
-  var journeys: ListBuffer[Journey] = ListBuffer()
+case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) { self =>
 
-  def addOrigin(origin: String): Unit = journeys.prepend(Journey(origin))
+  def addOrigin(origin: String): ClamCard = self.copy(journeys = Journey(origin) +=: journeys)
 
   def addDestiny(destiny: String): Unit = journeys.update(0, Journey(journeys.head.origin, Some(destiny)))
 

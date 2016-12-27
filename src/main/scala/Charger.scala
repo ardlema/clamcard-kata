@@ -19,7 +19,7 @@ object Charger {
     zonesFounded.head
   }
 
-  def topIn(card: ClamCard, origin: String): Unit = card.addOrigin(origin)
+  def topIn(card: ClamCard, origin: String): ClamCard = card.addOrigin(origin)
 
   def topOut(card: ClamCard, destiny: String): Unit = {
     card.addDestiny(destiny)
@@ -43,7 +43,11 @@ case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) {
 
   def addOrigin(origin: String): ClamCard = self.copy(journeys = Journey(origin) +=: journeys)
 
-  def addDestiny(destiny: String): Unit = journeys.update(0, Journey(journeys.head.origin, Some(destiny)))
+  def addDestiny(destiny: String): ClamCard = {
+    val newJourney = Journey(journeys.head.origin, Some(destiny))
+    self.journeys.update(0, newJourney)
+    self
+  }
 
   def lastOrigin(): String = journeys(0).origin
 

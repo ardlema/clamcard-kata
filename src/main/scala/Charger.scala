@@ -25,15 +25,41 @@ object Charger {
 
   def topIn(card: ClamCard, origin: String): ClamCard = card.addOrigin(origin)
 
-  def topOut(card: ClamCard, destiny: String): (ClamCard, Charge) = (card.addDestiny(destiny), workOutCharge(card))
+  def topOut(card: ClamCard, destiny: String): (ClamCard, Charge) = {
+    val cardWithDestiny = card.addDestiny(destiny)
+    (cardWithDestiny, workOutCharge(cardWithDestiny))
+  }
 
   def workOutCharge(card: ClamCard): Charge = {
     val originZone = Charger.getZoneFromStation(card.lastOrigin)
     val destinyZone = Charger.getZoneFromStation(card.lastDestiny)
+    val overallPrice = workOutOverallPrice(card).charge
+    if (overallPrice > dailyPrice(card.lastOrigin(), card.lastDestiny())) {
+      Charge(card.uid, overallPrice - Charger.prices(originZone).find(p => p.period.equals("Day")).get.price)
+    }
+    else {
+      workOutSingleJourney(originZone, destinyZone, card)
+    }
+  }
+
+  private def workOutSingleJourney(originZone: String, destinyZone: String, card: ClamCard): Charge = {
     if (originZone.equals(destinyZone)) {
       Charge(card.uid, Charger.prices(originZone).find(p => p.period.equals("Single")).get.price)
     } else {
       Charge(card.uid, Charger.prices("B").find(p => p.period.equals("Single")).get.price)
+    }
+  }
+
+  private def workOutOverallPrice(card: ClamCard): Charge = {
+    val total = card.journeys.foldLeft(0F)((s, journey) =>
+      s + workOutSingleJourney(journey.origin, journey.destiny.get, card).charge)
+    Charge(card.uid, total)
+  }
+
+  private def dailyPrice(originZone: String, destinyZone: String): Float = {
+    (originZone, destinyZone) match {
+      case ("A", "A") => Charger.prices(originZone).find(p => p.period.equals("Day")).get.price
+      case _ => Charger.prices("B").find(p => p.period.equals("Day")).get.price
     }
   }
 }

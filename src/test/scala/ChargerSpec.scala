@@ -74,7 +74,7 @@ class ChargerSpec extends FunSpec {
     charge.cardId should be("manolo")
   }
 
-  /*it("should charge the difference til Day Fare for Zone A when travelling within zone A and exceeds the Day Fare") {
+  it("should charge the difference til Day Fare for Zone A when travelling within zone A and exceeds the Day Fare") {
     val card = ClamCard("manolo")
     Charger.topIn(card, "Asterisk")
     Charger.topOut(card, "Aldgate")
@@ -85,5 +85,5 @@ class ChargerSpec extends FunSpec {
     val charge = Charger.workOutCharge(card)
     charge.charge should be(2.0)
     charge.cardId should be("manolo")
-  }*/
+  }
 }

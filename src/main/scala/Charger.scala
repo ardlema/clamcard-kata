@@ -17,7 +17,6 @@ object Charger {
         PeriodAndPrice("Day", 8.0F))
   )
 
-
   def getZoneFromStation(origin: String): String = {
     val zonesFounded: Iterable[String] = zones.filter(_._2.contains(origin)).map(e => e._1)
     zonesFounded.head
@@ -35,7 +34,7 @@ object Charger {
     val destinyZone = Charger.getZoneFromStation(card.lastDestiny)
     val overallPrice = workOutOverallPrice(card).charge
     if (overallPrice > dailyPrice(card.lastOrigin(), card.lastDestiny())) {
-      Charge(card.uid, overallPrice - Charger.prices(originZone).find(p => p.period.equals("Day")).get.price)
+      Charge(card.uid, overallPrice - findPeriodAndPricePerZone(originZone, "Day").get.price)
     }
     else {
       workOutSingleJourney(originZone, destinyZone, card)
@@ -44,9 +43,9 @@ object Charger {
 
   private def workOutSingleJourney(originZone: String, destinyZone: String, card: ClamCard): Charge = {
     if (originZone.equals(destinyZone)) {
-      Charge(card.uid, Charger.prices(originZone).find(p => p.period.equals("Single")).get.price)
+      Charge(card.uid, findPeriodAndPricePerZone(originZone, "Single").get.price)
     } else {
-      Charge(card.uid, Charger.prices("B").find(p => p.period.equals("Single")).get.price)
+      Charge(card.uid, findPeriodAndPricePerZone("B", "Single").get.price)
     }
   }
 
@@ -58,9 +57,13 @@ object Charger {
 
   private def dailyPrice(originZone: String, destinyZone: String): Float = {
     (originZone, destinyZone) match {
-      case ("A", "A") => Charger.prices(originZone).find(p => p.period.equals("Day")).get.price
-      case _ => Charger.prices("B").find(p => p.period.equals("Day")).get.price
+      case ("A", "A") => findPeriodAndPricePerZone(originZone, "Day").get.price
+      case _ => findPeriodAndPricePerZone("B", "Day").get.price
     }
+  }
+
+  private def findPeriodAndPricePerZone(zone: String, period: String): Option[PeriodAndPrice] = {
+    Charger.prices(zone).find(p => p.period.equals(period))
   }
 }
 
@@ -79,15 +82,4 @@ case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) {
   def lastOrigin(): String = journeys(0).origin
 
   def lastDestiny(): String = journeys(0).destiny.getOrElse("")
-
-/*  def charge(): Unit = {
-    val journey = journeys(0)
-    val originZone = Charger.getZoneFromStation(journey.origin)
-    val destinyZone = Charger.getZoneFromStation(journey.destiny.get)
-    if (originZone.equals(destinyZone)) {
-      journeys.update(0, journeys(0).copy(charge = Charger.prices(originZone).find(p => p.period.equals("Single")).get.price))
-    } else {
-      journeys.update(0, journeys(0).copy(charge = Charger.prices("B").find(p => p.period.equals("Single")).get.price))
-    }
-  }*/
 }

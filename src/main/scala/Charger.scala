@@ -1,6 +1,10 @@
 import scala.collection.immutable.Iterable
 import scala.collection.mutable.ListBuffer
 
+case class PeriodAndPrice(period: String, price: Float)
+
+case class Charge(cardId: String, charge: Float)
+
 object Charger {
   val zones = Map("A" -> List("Asterisk", "Aldgate"), "B" -> List("Barbican", "Balham"))
   val prices = Map("A" ->
@@ -21,23 +25,20 @@ object Charger {
 
   def topIn(card: ClamCard, origin: String): ClamCard = card.addOrigin(origin)
 
-  def topOut(card: ClamCard, destiny: String): Unit = {
-    card.addDestiny(destiny)
-    card.charge()
-  }
+  def topOut(card: ClamCard, destiny: String): (ClamCard, Charge) = (card.addDestiny(destiny), workOutCharge(card))
 
-  def workOutCharge(card: ClamCard): Float = {
+  def workOutCharge(card: ClamCard): Charge = {
     val originZone = Charger.getZoneFromStation(card.lastOrigin)
     val destinyZone = Charger.getZoneFromStation(card.lastDestiny)
     if (originZone.equals(destinyZone)) {
-      Charger.prices(originZone).find(p => p.period.equals("Single")).get.price
+      Charge(card.uid, Charger.prices(originZone).find(p => p.period.equals("Single")).get.price)
     } else {
-      Charger.prices("B").find(p => p.period.equals("Single")).get.price
+      Charge(card.uid, Charger.prices("B").find(p => p.period.equals("Single")).get.price)
     }
   }
 }
 
-case class Journey(origin: String, destiny: Option[String] = None, charge: Float = 0)
+case class Journey(origin: String, destiny: Option[String] = None)
 
 case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) { self =>
 
@@ -53,7 +54,7 @@ case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) {
 
   def lastDestiny(): String = journeys(0).destiny.getOrElse("")
 
-  def charge(): Unit = {
+/*  def charge(): Unit = {
     val journey = journeys(0)
     val originZone = Charger.getZoneFromStation(journey.origin)
     val destinyZone = Charger.getZoneFromStation(journey.destiny.get)
@@ -62,7 +63,5 @@ case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) {
     } else {
       journeys.update(0, journeys(0).copy(charge = Charger.prices("B").find(p => p.period.equals("Single")).get.price))
     }
-  }
+  }*/
 }
-
-case class PeriodAndPrice(period: String, price: Float)

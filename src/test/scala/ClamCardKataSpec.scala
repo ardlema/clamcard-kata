@@ -8,7 +8,7 @@ class ClamCardKataSpec extends FeatureSpec with GivenWhenThen with Matchers {
     info("I want to use my contactless travel card")
     info("So that I can travel around the underground and be charged accordingly")
 
-    scenario("Michael travels within ZoneA") {
+    /*scenario("Michael travels within ZoneA") {
       Given("Michael has a ClamCard")
       val michaelClamCard = new ClamCard("Michael")
       When("He travels from Asterisk to Aldgate")
@@ -59,6 +59,6 @@ class ClamCardKataSpec extends FeatureSpec with GivenWhenThen with Matchers {
       thirdCharge.charge should be(2.0)
       /*When("He travels from Bison to Bullhead")
       Then("He won't be charged for his last journey")*/
-    }
+    }*/
   }
 }

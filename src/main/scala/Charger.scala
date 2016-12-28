@@ -33,11 +33,13 @@ object Charger {
     val originZone = Charger.getZoneFromStation(card.lastOrigin)
     val destinyZone = Charger.getZoneFromStation(card.lastDestiny)
     val overallPrice = workOutOverallPrice(card).charge
-    if (overallPrice > dailyPrice(card.lastOrigin(), card.lastDestiny())) {
-      Charge(card.uid, overallPrice - findPeriodAndPricePerZone(originZone, "Day").get.price)
+    val dayPrice = dailyPrice(originZone, destinyZone)
+    val singleJourney = workOutSingleJourney(originZone, destinyZone, card)
+    if (overallPrice > dayPrice) {
+      Charge(card.uid, findPeriodAndPricePerZone(originZone, "Day").get.price - (overallPrice - singleJourney.charge))
     }
     else {
-      workOutSingleJourney(originZone, destinyZone, card)
+      singleJourney
     }
   }
 
@@ -51,7 +53,10 @@ object Charger {
 
   private def workOutOverallPrice(card: ClamCard): Charge = {
     val total = card.journeys.foldLeft(0F)((s, journey) =>
-      s + workOutSingleJourney(journey.origin, journey.destiny.get, card).charge)
+      s + workOutSingleJourney(
+        Charger.getZoneFromStation(journey.origin),
+        Charger.getZoneFromStation(journey.destiny.get),
+        card).charge)
     Charge(card.uid, total)
   }
 

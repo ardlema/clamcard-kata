@@ -9,6 +9,8 @@ class ChargerSpec extends FunSpec {
     Charger.getZoneFromStation("Asterisk") should be("A")
   }
 
+  //TODO: Test for non-existing station
+
   it("should add the origin station when the user top-in") {
     val card = ClamCard("manolo")
     Charger.topIn(card, "Asterisk")
@@ -83,6 +85,18 @@ class ChargerSpec extends FunSpec {
     Charger.topIn(card, "Asterisk")
     Charger.topOut(card, "Aldgate")
     val charge = Charger.workOutCharge(card)
+    charge.charge should be(2.0)
+    charge.cardId should be("manolo")
+  }
+
+  it("should charge the difference til Day Fare for Zone B when travelling within zone B and exceeds the Day Fare") {
+    val card = ClamCard("manolo")
+    Charger.topIn(card, "Barbican")
+    Charger.topOut(card, "Balham")
+    Charger.topIn(card, "Balham")
+    Charger.topOut(card, "Barbican")
+    Charger.topIn(card, "Barbican")
+    val (cardCharged, charge) = Charger.topOut(card, "Balham")
     charge.charge should be(2.0)
     charge.cardId should be("manolo")
   }

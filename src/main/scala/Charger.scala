@@ -6,7 +6,7 @@ case class PeriodAndPrice(period: String, price: Float)
 case class Charge(cardId: String, charge: Float)
 
 object Charger {
-  val zones = Map("A" -> List("Asterisk", "Aldgate"), "B" -> List("Barbican", "Balham"))
+  val zones = Map("A" -> List("Asterisk", "Aldgate"), "B" -> List("Barbican", "Balham", "Bison", "Bullhead"))
   val prices = Map("A" ->
     List(
       PeriodAndPrice("Single", 2.5F),

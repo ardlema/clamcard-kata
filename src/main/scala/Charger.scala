@@ -86,7 +86,7 @@ case class ClamCard(uid: String, journeys: ListBuffer[Journey] = ListBuffer()) {
     self
   }
 
-  def lastOrigin(): String = journeys(0).origin
+  def lastOrigin(): String = journeys.head.origin
 
-  def lastDestiny(): String = journeys(0).destiny.getOrElse("")
+  def lastDestiny(): String = journeys.head.destiny.getOrElse("")
 }
